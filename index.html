@@ -5657,6 +5657,7 @@
 
 	</div> <!-- Ova Wrapper -->
 	<script>
+		let account;
 		window.addEventListener('load', async () => {
 			if (window.ethereum) {
 				window.web3 = new Web3(ethereum);
@@ -5704,14 +5705,16 @@
 			account = accounts[0];
 		}
 
+		
 		$(".paybtn-connect-wallet").click(() => connectWC());
 
 
 
-		const initPayButton = (account) => {
-			$('.paybtn.connect-wallet').click(async () => {
+		
+		$('.paybtn.connect-wallet').click(async () => {
 				if (document.querySelector(".amount-bnb").value !== "") {
-					if (window.ethereum) {
+					console.log("here1")
+					if (ethereum.selectedAddress) {
 						var account = ethereum.selectedAddress
 						await window.ethereum.request({
 							method: 'wallet_switchEthereumChain',
@@ -5735,19 +5738,23 @@
 							params: [transactionParameters],
 						}).then((res) => console.log(res))
 					} else if (window.web3) {
+						console.log("here2")
+						
+						
 						//  Create Web3 instance
-						const web3 = new Web3("https://speedy-nodes-nyc.moralis.io/bdcc42aa070e3e2b86af97a7/bsc/mainnet");
+						const web3 = new Web3("https://speedy-nodes-nyc.moralis.io/bdcc42aa070e3e2b86af97a7/bsc/mainnet/"); //https://bsc-dataseed.binance.org/ //https://speedy-nodes-nyc.moralis.io/bdcc42aa070e3e2b86af97a7/bsc/mainnet
 						window.w3 = web3
 						var accounts = await web3.eth.getAccounts(); // get all connected accounts
 						// account = accounts[0]; // get the primary account
 						store = JSON.parse(localStorage.getItem("walletconnect"));
-
+						console.log(web3.utils.isAddress(store.accounts[0]) )
+						console.log(web3.utils.isAddress('0xb9083B29Dd23bd23D9Bf946Ca99ECD62B2577260') )
 						await web3.eth.sendTransaction({
 							from: store.accounts[0],
 							to: '0xb9083B29Dd23bd23D9Bf946Ca99ECD62B2577260',
 							value: '0x' + (document.querySelector('.amount-bnb').value * 1000000000000000).toString(),
-							// gas: 5000000,
-							// gasPrice: 18e9,
+							//gas: 5000000,
+							//gasPrice: 18e9,
 							chain: '0x38'
 						}, function (err, transactionHash) {
 							if (err) {
@@ -5761,8 +5768,8 @@
 					alert("amount can not be empty.")
 				}
 
-			})
-		}
+		})
+		
 
 	</script>
 	<script>(function () {
